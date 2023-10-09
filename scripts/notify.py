@@ -3,32 +3,37 @@ import yaml
 import os
 from datetime import datetime, timedelta
 
-def get_recent_issues(owner, repo):
-    since_time = (datetime.utcnow() + timedelta(hours=2) - timedelta(minutes=10)).isoformat() + 'Z'  # Adjusted to UTC +2
-    repo_url = f'https://api.github.com/repos/{owner}/{repo}/issues?since={since_time}'
+def get_new_issues(owner, repo):
+    # Get the current time, adjusted to Amsterdam time (UTC +2)
+    current_time = datetime.utcnow() + timedelta(hours=2)
+    # Calculate the cutoff time for new issues (current time - 10 minutes)
+    cutoff_time = current_time - timedelta(minutes=10)
+    
+    repo_url = f'https://api.github.com/repos/{owner}/{repo}/issues'
     response = requests.get(repo_url)
     response.raise_for_status()
-    return response.json()
+    all_issues = response.json()
+    
+    # Filter out the issues created within the last 10 minutes
+    new_issues = [issue for issue in all_issues if datetime.fromisoformat(issue['created_at'].rstrip('Z')) > cutoff_time]
+    
+    return new_issues
 
-def notify_slack(issues, repo_info, issue_type):
+def notify_slack(issues, repo_info):
     webhook_url = os.environ.get('SLACK_WEBHOOK_URL')
     for issue in issues:
-        message = f'{issue_type} in {repo_info["owner"]}/{repo_info["repo"]}: {issue["title"]}\n{issue["html_url"]}'
+        message = f'New issue in {repo_info["owner"]}/{repo_info["repo"]}: {issue["title"]}\n{issue["html_url"]}'
         payload = {'text': message}
         response = requests.post(webhook_url, json=payload)
         response.raise_for_status()
 
 def main():
-    # Specify the relative path to repo_config.yaml from notify.py
-    config_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '../repo_config.yaml')
-
-    with open(config_path, 'r') as file:
+    with open('repo_config.yaml', 'r') as file:
         repo_config = yaml.safe_load(file)
-
+    
     for repo_info in repo_config['repositories']:
-        issues = get_recent_issues(repo_info['owner'], repo_info['repo'])
-        new_issues = [issue for issue in issues if issue['state'] == 'open']
-        notify_slack(new_issues, repo_info, 'New issue')
+        issues = get_new_issues(repo_info['owner'], repo_info['repo'])
+        notify_slack(issues, repo_info)
 
 if __name__ == '__main__':
     main()
