@@ -1,23 +1,14 @@
 import requests
 import yaml
 import os
-import json
+from datetime import datetime, timedelta
 
-def get_new_issues(owner, repo, last_issue_id, open_issues):
-    repo_url = f'https://api.github.com/repos/{owner}/{repo}/issues'
+def get_recent_issues(owner, repo):
+    since_time = (datetime.utcnow() - timedelta(minutes=5)).isoformat() + 'Z'  # 'Z' indicates UTC time
+    repo_url = f'https://api.github.com/repos/{owner}/{repo}/issues?since={since_time}'
     response = requests.get(repo_url)
     response.raise_for_status()
-    issues = response.json()
-    
-    new_issues = [issue for issue in issues if issue['number'] > last_issue_id]
-    closed_issues = [issue for issue in open_issues if issue not in issues]
-    
-    # Update last_issue_id and open_issues
-    if new_issues:
-        last_issue_id = max(issue['number'] for issue in new_issues)
-    open_issues = [issue['number'] for issue in issues if issue['state'] == 'open']
-    
-    return new_issues, closed_issues, last_issue_id, open_issues
+    return response.json()
 
 def notify_slack(issues, repo_info, issue_type):
     webhook_url = os.environ.get('SLACK_WEBHOOK_URL')
@@ -33,31 +24,11 @@ def main():
 
     with open(config_path, 'r') as file:
         repo_config = yaml.safe_load(file)
-    
-    # Read the last issue ID and open issues list from files, with defaults for the first run
-    if os.path.exists('last_issue_id.txt'):
-        with open('last_issue_id.txt', 'r') as file:
-            last_issue_id = int(file.read().strip())
-    else:
-        last_issue_id = 0
-    
-    if os.path.exists('open_issues.txt'):
-        with open('open_issues.txt', 'r') as file:
-            open_issues = json.load(file)
-    else:
-        open_issues = []
-    
+
     for repo_info in repo_config['repositories']:
-        new_issues, closed_issues, last_issue_id, open_issues = get_new_issues(
-            repo_info['owner'], repo_info['repo'], last_issue_id, open_issues)
+        issues = get_recent_issues(repo_info['owner'], repo_info['repo'])
+        new_issues = [issue for issue in issues if issue['state'] == 'open']
         notify_slack(new_issues, repo_info, 'New issue')
-        notify_slack(closed_issues, repo_info, 'Closed issue')
-    
-    # Write the updated last issue ID and open issues list to files
-    with open('last_issue_id.txt', 'w') as file:
-        file.write(str(last_issue_id))
-    with open('open_issues.txt', 'w') as file:
-        json.dump(open_issues, file)
 
 if __name__ == '__main__':
     main()
