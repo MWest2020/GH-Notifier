@@ -17,10 +17,8 @@ def notify_slack(issues, repo_info):
         response.raise_for_status()
 
 def main():
-    # Get the path to the repository root
-    repo_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    # Build the path to repo_config.yaml
-    config_path = os.path.join(repo_root, 'repo_config.yml')
+    # Specify the relative path to repo_config.yaml from notify.py
+    config_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '../repo_config.yaml')
 
     with open(config_path, 'r') as file:
         repo_config = yaml.safe_load(file)
