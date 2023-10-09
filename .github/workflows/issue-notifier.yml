@@ -18,7 +18,7 @@ jobs:
         python-version: '3.x'
       
     - name: Install dependencies
-      run: pip install requests pyyaml
+      run: pip install requests pyyaml logging
       
     - name: Run script
       run: python scripts/notify.py
