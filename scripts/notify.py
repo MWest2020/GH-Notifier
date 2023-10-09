@@ -2,9 +2,6 @@ import requests
 import yaml
 import os
 
-
-
-
 def get_new_issues(owner, repo):
     repo_url = f'https://api.github.com/repos/{owner}/{repo}/issues'
     response = requests.get(repo_url)
@@ -20,7 +17,12 @@ def notify_slack(issues, repo_info):
         response.raise_for_status()
 
 def main():
-    with open('repo_config.yaml', 'r') as file:
+    # Get the path to the repository root
+    repo_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    # Build the path to repo_config.yaml
+    config_path = os.path.join(repo_root, 'repo_config.yaml')
+
+    with open(config_path, 'r') as file:
         repo_config = yaml.safe_load(file)
     for repo_info in repo_config['repositories']:
         issues = get_new_issues(repo_info['owner'], repo_info['repo'])
