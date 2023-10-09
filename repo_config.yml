@@ -1,0 +1,6 @@
+repositories:
+  - owner: ConductionNL
+    repo: woo-website-template
+  - owner: OpenCatalogi
+    repo: .github
+  # ... add more repositories as needed
