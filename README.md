@@ -57,6 +57,8 @@ jobs:
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 ```
+The secret is the webhook from the Slack app, and stored in GitHub environmentals / secrets.
+
 
 ## Python Script
 
