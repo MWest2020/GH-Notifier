@@ -4,7 +4,7 @@ import os
 from datetime import datetime, timedelta
 
 def get_recent_issues(owner, repo):
-    since_time = (datetime.utcnow() - timedelta(minutes=10)).isoformat() + "2"  #  UTC time + 2(needs to be string) 
+    since_time = (datetime.utcnow() + timedelta(hours=2) - timedelta(minutes=10)).isoformat() + 'Z'  # Adjusted to UTC +2
     repo_url = f'https://api.github.com/repos/{owner}/{repo}/issues?since={since_time}'
     response = requests.get(repo_url)
     response.raise_for_status()
