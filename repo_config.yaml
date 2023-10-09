@@ -3,4 +3,6 @@ repositories:
     repo: woo-website-template
   - owner: OpenCatalogi
     repo: .github
+  - owner: Geleiding
+    repo: .github
   # ... add more repositories as needed
