@@ -20,7 +20,7 @@ def main():
     # Get the path to the repository root
     repo_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     # Build the path to repo_config.yaml
-    config_path = os.path.join(repo_root, 'repo_config.yaml')
+    config_path = os.path.join(repo_root, 'repo_config.yml')
 
     with open(config_path, 'r') as file:
         repo_config = yaml.safe_load(file)
