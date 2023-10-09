@@ -2,6 +2,7 @@ import requests
 import yaml
 import os
 import logging
+import pytz
 from datetime import datetime, timedelta
 from dateutil import parser
 
@@ -10,11 +11,11 @@ logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %
 
 def get_new_issues(owner, repo):
     # Get the current time in UTC
-    current_time = datetime.utcnow()
+    current_time = datetime.utcnow().replace(tzinfo=pytz.UTC)
     # Calculate the cutoff time for new issues (current time - 10 minutes)
     cutoff_time = current_time - timedelta(minutes=10)
     
-    logging.debug(f'Cutoff time for new issues: {cutoff_time.isoformat()}Z')  # Log the cutoff time
+    logging.debug(f'Cutoff time for new issues: {cutoff_time.isoformat()}')  # Log the cutoff time
     
     repo_url = f'https://api.github.com/repos/{owner}/{repo}/issues'
     response = requests.get(repo_url)
