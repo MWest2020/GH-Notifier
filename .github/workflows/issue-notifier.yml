@@ -21,3 +21,5 @@ jobs:
       
     - name: Run script
       run: python scripts/notify.py
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}

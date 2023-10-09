@@ -2,6 +2,9 @@ import requests
 import yaml
 import os
 
+
+
+
 def get_new_issues(owner, repo):
     repo_url = f'https://api.github.com/repos/{owner}/{repo}/issues'
     response = requests.get(repo_url)
@@ -9,7 +12,7 @@ def get_new_issues(owner, repo):
     return response.json()
 
 def notify_slack(issues, repo_info):
-    webhook_url = 'https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX'
+    webhook_url = os.environ.get('SLACK_WEBHOOK_URL')
     for issue in issues:
         message = f'New issue in {repo_info["owner"]}/{repo_info["repo"]}: {issue["title"]}\n{issue["html_url"]}'
         payload = {'text': message}
