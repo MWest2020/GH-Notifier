@@ -1,7 +1,11 @@
 import requests
 import yaml
 import os
+import logging
 from datetime import datetime, timedelta
+
+# Configure logging
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 
 def get_new_issues(owner, repo):
     # Get the current time, adjusted to Amsterdam time (UTC +2)
@@ -16,7 +20,7 @@ def get_new_issues(owner, repo):
     
     # Filter out the issues created within the last 10 minutes
     new_issues = [issue for issue in all_issues if datetime.fromisoformat(issue['created_at'].rstrip('Z')) > cutoff_time]
-    
+    logging.debug(f'New issues for {owner}/{repo}: {new_issues}')  # Log the new issues
     return new_issues
 
 def notify_slack(issues, repo_info):
@@ -25,6 +29,7 @@ def notify_slack(issues, repo_info):
         message = f'New issue in {repo_info["owner"]}/{repo_info["repo"]}: {issue["title"]}\n{issue["html_url"]}'
         payload = {'text': message}
         response = requests.post(webhook_url, json=payload)
+        logging.debug(f'Slack response: {response.text}')  # Log the Slack response
         response.raise_for_status()
 
 def main():
