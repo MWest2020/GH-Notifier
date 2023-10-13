@@ -7,7 +7,7 @@ from datetime import datetime, timedelta
 from dateutil import parser
 
 # Configure logging
-logging.basicConfig(level=logging.ERROR, format='%(asctime)s - %(levelname)s - %(message)s')
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 
 def get_new_issues(owner, repo):
     # Get the current time in UTC
@@ -29,19 +29,12 @@ def get_new_issues(owner, repo):
 
 def notify_slack(issues, repo_info):
     webhook_url = os.environ.get('SLACK_WEBHOOK_URL')
-    if webhook_url is None:
-        print("no webhook url set")
-
-    headers = {'Content-Type': 'application/json'}
-
     for issue in issues:
         message = f'New issue in {repo_info["owner"]}/{repo_info["repo"]}: {issue["title"]}\n{issue["html_url"]}'
         payload = {'text': message}
-        response = requests.post(webhook_url, json=payload, headers=headers)
-        response.raise_for_status()  # This will raise an exception for HTTP error codes
-        
-
-
+        response = requests.post(webhook_url, json=payload)
+        logging.debug(f'Slack response: {response.text}')  # Log the Slack response
+        response.raise_for_status()
 
 def main():
     with open('repo_config.yaml', 'r') as file:
