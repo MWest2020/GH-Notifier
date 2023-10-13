@@ -29,22 +29,11 @@ def get_new_issues(owner, repo):
 
 def notify_slack(issues, repo_info):
     webhook_url = os.environ.get('SLACK_WEBHOOK_URL')
-    if webhook_url is None:
-        logging.error('SLACK_WEBHOOK_URL environment variable is not set')
-        return
-
-    headers = {'Content-Type': 'application/json'}
-
     for issue in issues:
         message = f'New issue in {repo_info["owner"]}/{repo_info["repo"]}: {issue["title"]}\n{issue["html_url"]}'
         payload = {'text': message}
-        try:
-            response = requests.post(webhook_url, json=payload, headers=headers)
-            response.raise_for_status()  # This will raise an exception for HTTP error codes
-        except requests.exceptions.RequestException as e:
-            logging.error(f'Failed to send notification to Slack: {e}')
-            if response is not None:
-                logging.error(f'Slack response: {response.status_code} - {response.text}')
+        response = requests.post(webhook_url, json=payload)
+        response.raise_for_status()
 
 
 def main():
