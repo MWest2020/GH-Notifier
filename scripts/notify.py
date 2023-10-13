@@ -1,4 +1,4 @@
-Rimport requests
+import requests
 import yaml
 import os
 import logging
