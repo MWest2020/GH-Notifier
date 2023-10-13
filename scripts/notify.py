@@ -7,7 +7,7 @@ from datetime import datetime, timedelta
 from dateutil import parser
 
 # Configure logging
-logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
+logging.basicConfig(level=logging.ERROR, format='%(asctime)s - %(levelname)s - %(message)s')
 
 def get_new_issues(owner, repo):
     # Get the current time in UTC
