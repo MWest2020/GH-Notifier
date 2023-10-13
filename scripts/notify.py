@@ -38,6 +38,7 @@ def notify_slack(issues, repo_info):
     for issue in issues:
         message = f'New issue in {repo_info["owner"]}/{repo_info["repo"]}: {issue["title"]}\n{issue["html_url"]}'
         payload = {'text': message}
+        response = None  # Move the response variable definition outside the try block
         try:
             response = requests.post(webhook_url, json=payload, headers=headers)
             response.raise_for_status()  # This will raise an exception for HTTP error codes
