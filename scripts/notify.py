@@ -18,12 +18,12 @@ def get_new_issues(owner, repo):
     logging.debug(f'Cutoff time for new issues: {cutoff_time.isoformat()}')  # Log the cutoff time
     
     repo_url = f'https://api.github.com/repos/{owner}/{repo}/issues'
-    response = requests.get(repo_url)
+    response = requests.get(repo_url, params={'since': cutoff_time.isoformat()})
     response.raise_for_status()
     all_issues = response.json()
     
-    # Filter out the issues created within the last 10 minutes
-    new_issues = [issue for issue in all_issues if parser.parse(issue['created_at']) > cutoff_time]
+    # Filter out the issues created within the last 10 minutes and are not pull requests
+    new_issues = [issue for issue in all_issues if parser.parse(issue['created_at']) > cutoff_time and 'pull_request' not in issue]
     logging.debug(f'New issues for {owner}/{repo}: {new_issues}')  # Log the new issues
     return new_issues
 
@@ -46,7 +46,6 @@ def notify_slack(issues, repo_info):
             logging.error(f'Failed to send notification to Slack: {e}')
             if response is not None:
                 logging.error(f'Slack response: {response.status_code} - {response.text}')
-
 
 def main():
     with open('repo_config.yaml', 'r') as file:
