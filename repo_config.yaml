@@ -3,6 +3,23 @@ repositories:
     repo: woo-website-template
   - owner: OpenCatalogi
     repo: .github
+  - owner: OpenCatalogi
+    repo: publiccode-action
+  - owner: OpenCatalogi
+    repo: product-website
+  - owner: OpenCatalogi
+    repo: OpenCatalogiBundle
+  - owner: OpenCatalogi
+    repo: opencatalogi.nl
+  - owner: OpenCatalogi
+    repo: opencatalogi-action
+  - owner: Dimpact
+    repo: opencatalogi-action
+  - owner: Dimpact
+    repo: Open-Webconcept
+  - owner: OpenCatalogi
+    repo: leiden
+  
   - owner: Geleiding
     repo: .github
   # ... add more repositories as needed
