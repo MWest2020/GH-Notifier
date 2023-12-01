@@ -13,10 +13,6 @@ repositories:
     repo: opencatalogi.nl
   - owner: OpenCatalogi
     repo: opencatalogi-action
-  - owner: Dimpact
-    repo: opencatalogi-action
-  - owner: Dimpact
-    repo: Open-Webconcept
   - owner: OpenCatalogi
     repo: leiden
   
