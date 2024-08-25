@@ -1,6 +1,6 @@
 # GitHub to Slack Notifier
 
-This repository contains a setup to notify a Slack channel about new issues created in specified GitHub repositories. The notification system is built using a Python script which is executed through a GitHub Actions workflow. Keep in  mind that it will fail after 90 days of inactivity (that's a GitHub policy)
+This repository contains a setup to notify a Slack channel about new issues created in specified GitHub repositories. The notification system is built using a Python script which is executed through a GitHub Actions workflow. Keep in  mind that it will fail after 90 days of repository inactivity (that's a GitHub policy), so you might want to setup the crons differently. 
 
 ## Repository Structure
 
