@@ -1,6 +1,19 @@
 repositories:
   - owner: ConductionNL
     repo: woo-website-template
+  - owner: ConductionNL
+    repo: openregister
+  - owner: ConductionNL
+    repo: zaakafhandelapp
+  - owner: ConductionNL
+    repo: opencatalogi
+  - owner: ConductionNL
+    repo: larpingapp
+  - owner: ConductionNL
+    repo: openconnector
+  - owner: ConductionNL
+    repo: softwarecatalog
+  
   - owner: OpenCatalogi
     repo: .github
   - owner: OpenCatalogi
@@ -15,6 +28,8 @@ repositories:
     repo: opencatalogi-action
   - owner: OpenCatalogi
     repo: leiden
+  - owner: OpenCatalogi
+    repo: opencatalogi
   
   - owner: Geleiding
     repo: .github
