@@ -30,6 +30,8 @@ repositories:
     repo: leiden
   - owner: OpenCatalogi
     repo: opencatalogi
+  - owner: VNG-Realisatie
+    repo: softwarecatalogus
   
   - owner: Geleiding
     repo: .github
